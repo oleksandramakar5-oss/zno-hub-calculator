@@ -375,11 +375,14 @@
             }
         });
 
-        // Пріоритет преміуму
+        // ОНОВЛЕНЕ ПРАВИЛО СОРТУВАННЯ: Пріоритет преміуму, потім за тривалістю
         selectedSubjects.sort((a, b) => {
+            // 1. Спочатку за тарифом (premium вище)
             if (a.tariff === 'premium' && b.tariff !== 'premium') return -1;
             if (a.tariff !== 'premium' && b.tariff === 'premium') return 1;
-            return 0;
+            
+            // 2. Якщо тарифи однакові, сортуємо за тривалістю (вища тривалість вище)
+            return b.duration - a.duration;
         });
 
         let globalGrandTotal = 0;
