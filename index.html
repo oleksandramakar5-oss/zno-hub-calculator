@@ -6,14 +6,13 @@
     <title>Розрахунок вартості</title>
     <style>
         :root {
-            --primary: #4f46e5;
-            --primary-light: #e0e7ff;
+            --primary: #d97706;
+            --primary-light: #fef3c7;
             --bg: #f8fafc;
             --card: #ffffff;
             --text-dark: #0f172a;
             --text-muted: #64748b;
             --border: #e2e8f0;
-            --accent: #f43f5e;
         }
         body { 
             font-family: 'Inter', system-ui, sans-serif; 
@@ -23,12 +22,12 @@
             margin: 0; 
         }
         .container {
-            max-width: 850px;
+            max-width: 900px;
             margin: 0 auto;
             background: var(--card);
             padding: 2.5rem;
             border-radius: 16px;
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.01);
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
         }
         h2 { text-align: center; margin-top: 0; margin-bottom: 2rem; color: var(--text-dark); font-size: 1.8rem; }
         
@@ -39,41 +38,32 @@
         }
         
         .subject-row {
-            display: grid;
-            grid-template-columns: 2fr 1.5fr 2.5fr;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            padding: 1.25rem;
             background: #fff;
             border: 1px solid var(--border);
             border-radius: 12px;
             transition: all 0.2s;
         }
-        .grid-header {
-            display: grid;
-            grid-template-columns: 2fr 1.5fr 2.5fr;
-            gap: 1rem;
-            padding: 0 1rem 0.5rem 1rem;
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-
-        .detailed-mode .subject-row { grid-template-columns: 2fr 1.5fr 2.5fr 1.5fr; }
-        .detailed-mode .grid-header { grid-template-columns: 2fr 1.5fr 2.5fr 1.5fr; }
 
         .subject-row.active {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px var(--primary-light);
-            background: #fafbfa;
+            border-color: #d97706;
+            box-shadow: 0 0 0 2px rgba(217, 119, 6, 0.1);
+            background: #fffdfa;
+            border-width: 2px;
+        }
+
+        .row-top {
+            display: grid;
+            grid-template-columns: 2fr 1.5fr 2.5fr 1.5fr;
+            align-items: center;
+            gap: 1rem;
         }
         
         .col-name { display: flex; align-items: center; gap: 0.75rem; font-weight: 600; }
-        
-        .col-name input[type="checkbox"] { display: none; width: 1.25rem; height: 1.25rem; accent-color: var(--primary); cursor: pointer; }
-        .detailed-mode .col-name input[type="checkbox"] { display: inline-block; }
-
-        .col-name select { width: auto; font-weight: 500; font-size: 0.9rem; padding: 0.3rem; border-radius: 6px; border: 1px solid var(--border); margin-left: 0.5rem; }
+        .col-name input[type="checkbox"] { width: 1.25rem; height: 1.25rem; accent-color: #d97706; cursor: pointer; }
         
         select {
             width: 100%;
@@ -87,39 +77,50 @@
             cursor: pointer;
         }
         select:disabled { background: #f1f5f9; cursor: not-allowed; opacity: 0.6; }
-        
-        .total-display, .total-col-header { display: none; }
-        .detailed-mode .total-display { display: flex; flex-direction: column; }
-        .detailed-mode .total-col-header { display: block; }
 
-        .total-display { font-weight: 700; color: var(--text-dark); text-align: right; font-size: 1.15rem; }
-        .total-display small { font-size: 0.75rem; color: var(--text-muted); font-weight: 400; margin-top: 4px; }
+        .stream-badges {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 0.8rem;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            width: fit-content;
+            font-weight: 500;
+        }
+        .badge-green { background: #d1fae5; color: #065f46; }
+        .badge-blue { background: #e0e7ff; color: #3730a3; }
+
+        .total-display { font-weight: 700; color: var(--text-dark); text-align: right; font-size: 1.2rem; }
+        .total-display small { display: block; font-size: 0.75rem; color: var(--text-muted); font-weight: 400; margin-top: 2px; }
         
         .summary-card {
-            background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
             padding: 2.5rem;
             border-radius: 12px;
             margin-top: 2rem;
             text-align: center;
-            border: 1px solid #c7d2fe;
+            border: 1px solid #fde68a;
         }
         
-        .summary-title { color: #4338ca; font-weight: 700; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
-        .grand-total { font-size: 3.5rem; font-weight: 800; color: var(--primary); line-height: 1.2; text-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .summary-title { color: #b45309; font-weight: 700; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+        .grand-total { font-size: 3.5rem; font-weight: 800; color: #d97706; line-height: 1.2; }
 
         .installments-box {
             margin-top: 1.5rem;
             padding-top: 1.5rem;
-            border-top: 1px dashed #a5b4fc;
+            border-top: 1px dashed #fcd34d;
             font-size: 1.15rem;
-            color: #3730a3;
+            color: #92400e;
         }
 
         @media (max-width: 768px) {
-            .grid-header { display: none; }
-            .subject-row { grid-template-columns: 1fr; gap: 0.75rem; }
-            .detailed-mode .subject-row { grid-template-columns: 1fr; }
-            .detailed-mode .total-display { text-align: left; flex-direction: row; align-items: center; justify-content: space-between; }
+            .row-top { grid-template-columns: 1fr; gap: 0.75rem; }
         }
     </style>
 </head>
@@ -128,102 +129,107 @@
 <div class="container" id="calculator-container">
     <h2>Розрахунок вартості</h2>
 
-    <div class="grid-header">
-        <div>Предмет</div>
-        <div>Тариф</div>
-        <div>Доступний потік</div>
-        <div class="total-col-header" style="text-align: right;">Загалом</div>
-    </div>
-
     <div class="subject-grid" id="subjectsContainer">
         
         <!-- Укр. мова -->
-        <div class="subject-row" id="row-ukr">
-            <label class="col-name">
-                <input type="checkbox" id="check-ukr" onchange="toggleRow('ukr'); calculate();" checked>
-                <span>Українська мова</span>
-            </label>
-            <div>
-                <select id="tariff-ukr" onchange="calculate()">
-                    <option value="standard">Стандарт</option>
-                    <option value="premium">Преміум</option>
-                </select>
+        <div class="subject-row active" id="row-ukr">
+            <div class="row-top">
+                <label class="col-name">
+                    <input type="checkbox" id="check-ukr" onchange="toggleRow('ukr'); calculate();" checked>
+                    <span>Українська мова</span>
+                </label>
+                <div>
+                    <select id="tariff-ukr" onchange="calculate()">
+                        <option value="standard">Стандарт</option>
+                        <option value="premium">Преміум</option>
+                    </select>
+                </div>
+                <div>
+                    <select id="stream-ukr" onchange="calculate()"></select>
+                </div>
+                <div class="total-display">
+                    <span id="total-ukr">0 ₴</span>
+                    <small id="dur-ukr"></small>
+                </div>
             </div>
-            <div>
-                <select id="stream-ukr" onchange="calculate()"></select>
-            </div>
-            <div class="total-display">
-                <span id="total-ukr">0 ₴</span>
-                <small id="dur-ukr"></small>
-            </div>
+            <div class="stream-badges" id="badges-ukr"></div>
         </div>
 
         <!-- Математика -->
-        <div class="subject-row" id="row-math">
-            <label class="col-name">
-                <input type="checkbox" id="check-math" onchange="toggleRow('math'); calculate();" checked>
-                <span>Математика</span>
-            </label>
-            <div>
-                <select id="tariff-math" onchange="calculate()">
-                    <option value="standard">Стандарт</option>
-                    <option value="premium">Преміум</option>
-                </select>
+        <div class="subject-row active" id="row-math">
+            <div class="row-top">
+                <label class="col-name">
+                    <input type="checkbox" id="check-math" onchange="toggleRow('math'); calculate();" checked>
+                    <span>Математика</span>
+                </label>
+                <div>
+                    <select id="tariff-math" onchange="calculate()">
+                        <option value="standard">Стандарт</option>
+                        <option value="premium">Преміум</option>
+                    </select>
+                </div>
+                <div>
+                    <select id="stream-math" onchange="calculate()"></select>
+                </div>
+                <div class="total-display">
+                    <span id="total-math">0 ₴</span>
+                    <small id="dur-math"></small>
+                </div>
             </div>
-            <div>
-                <select id="stream-math" onchange="calculate()"></select>
-            </div>
-            <div class="total-display">
-                <span id="total-math">0 ₴</span>
-                <small id="dur-math"></small>
-            </div>
+            <div class="stream-badges" id="badges-math"></div>
         </div>
 
         <!-- Історія -->
-        <div class="subject-row" id="row-hist">
-            <label class="col-name">
-                <input type="checkbox" id="check-hist" onchange="toggleRow('hist'); calculate();" checked>
-                <span onclick="toggleSecretMode(event)" style="cursor: pointer; user-select: none; border-bottom: 1px dashed transparent;" title="Подвійний клік для налаштувань">Історія України</span>
-            </label>
-            <div>
-                <select id="tariff-hist" onchange="calculate()">
-                    <option value="standard">Стандарт</option>
-                    <option value="premium">Преміум</option>
-                </select>
+        <div class="subject-row active" id="row-hist">
+            <div class="row-top">
+                <label class="col-name">
+                    <input type="checkbox" id="check-hist" onchange="toggleRow('hist'); calculate();" checked>
+                    <span>Історія України</span>
+                </label>
+                <div>
+                    <select id="tariff-hist" onchange="calculate()">
+                        <option value="standard">Стандарт</option>
+                        <option value="premium">Преміум</option>
+                    </select>
+                </div>
+                <div>
+                    <select id="stream-hist" onchange="calculate()"></select>
+                </div>
+                <div class="total-display">
+                    <span id="total-hist">0 ₴</span>
+                    <small id="dur-hist"></small>
+                </div>
             </div>
-            <div>
-                <select id="stream-hist" onchange="calculate()"></select>
-            </div>
-            <div class="total-display">
-                <span id="total-hist">0 ₴</span>
-                <small id="dur-hist"></small>
-            </div>
+            <div class="stream-badges" id="badges-hist"></div>
         </div>
 
         <!-- На вибір -->
-        <div class="subject-row" id="row-opt">
-            <label class="col-name" style="flex-wrap: wrap;">
-                <input type="checkbox" id="check-opt" onchange="toggleRow('opt'); calculate();" checked>
-                <select id="opt-subject-name" onchange="updateOptStreams(); calculate();">
-                    <option value="eng">Англійська мова</option>
-                    <option value="bio">Біологія</option>
-                    <option value="geo">Географія</option>
-                    <option value="lit">Укр. література</option>
-                </select>
-            </label>
-            <div>
-                <select id="tariff-opt" onchange="calculate()">
-                    <option value="standard">Стандарт</option>
-                    <option value="premium">Преміум</option>
-                </select>
+        <div class="subject-row active" id="row-opt">
+            <div class="row-top">
+                <label class="col-name" style="flex-wrap: wrap;">
+                    <input type="checkbox" id="check-opt" onchange="toggleRow('opt'); calculate();" checked>
+                    <select id="opt-subject-name" onchange="updateOptStreams(); calculate();">
+                        <option value="eng">Англійська мова</option>
+                        <option value="bio">Біологія</option>
+                        <option value="geo">Географія</option>
+                        <option value="lit">Укр. література</option>
+                    </select>
+                </label>
+                <div>
+                    <select id="tariff-opt" onchange="calculate()">
+                        <option value="standard">Стандарт</option>
+                        <option value="premium">Преміум</option>
+                    </select>
+                </div>
+                <div>
+                    <select id="stream-opt" onchange="calculate()"></select>
+                </div>
+                <div class="total-display">
+                    <span id="total-opt">0 ₴</span>
+                    <small id="dur-opt"></small>
+                </div>
             </div>
-            <div>
-                <select id="stream-opt" onchange="calculate()"></select>
-            </div>
-            <div class="total-display">
-                <span id="total-opt">0 ₴</span>
-                <small id="dur-opt"></small>
-            </div>
+            <div class="stream-badges" id="badges-opt"></div>
         </div>
 
     </div>
@@ -254,18 +260,12 @@
     const monthsUkr = ['січня', 'лютого', 'березня', 'квітня', 'травня', 'червня', 'липня', 'серпня', 'вересня', 'жовтня', 'листопада', 'грудня'];
     const fullMonthsRemaining = { 8: 8, 9: 7, 10: 6, 11: 5, 0: 4, 1: 3 };
 
-    function toggleSecretMode(e) {
-        e.preventDefault(); 
-        e.stopPropagation();
-        document.getElementById('calculator-container').classList.toggle('detailed-mode');
-    }
-
     function formatStreamName(dateStr) {
         const date = new Date(dateStr);
         return `старт ${date.getDate()} ${monthsUkr[date.getMonth()]}`;
     }
 
-    function getDurationMonths(dateStr) {
+    function getExactDuration(dateStr) {
         const date = new Date(dateStr);
         const m = date.getMonth();
         const y = date.getFullYear();
@@ -275,8 +275,15 @@
         const full = fullMonthsRemaining[m] || 0;
         const fraction = (daysInMonth - d + 1) / daysInMonth;
         
-        // Повністю точне число без примусового округлення в розрахунках
         return full + fraction;
+    }
+
+    function getDaysBetween(dateStr) {
+        const now = new Date();
+        now.setHours(0,0,0,0);
+        const target = new Date(dateStr);
+        const diffTime = target - now;
+        return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     }
 
     function populateStreams(subjectKey, selectElementId) {
@@ -329,6 +336,7 @@
     function updateOptStreams() {
         const subj = document.getElementById('opt-subject-name').value;
         populateStreams(subj, 'stream-opt');
+        calculate();
     }
 
     function toggleRow(id) {
@@ -337,17 +345,14 @@
         
         document.getElementById(`tariff-${id}`).disabled = !isChecked;
         document.getElementById(`stream-${id}`).disabled = !isChecked;
+        if (id === 'opt') document.getElementById('opt-subject-name').disabled = !isChecked;
         
-        if (id === 'opt') {
-            document.getElementById('opt-subject-name').disabled = !isChecked;
-        }
-        
-        if (isChecked) {
-            row.classList.add('active');
-        } else {
+        if (isChecked) row.classList.add('active');
+        else {
             row.classList.remove('active');
             document.getElementById(`total-${id}`).innerText = '0 ₴';
             document.getElementById(`dur-${id}`).innerText = '';
+            document.getElementById(`badges-${id}`).innerHTML = '';
         }
     }
 
@@ -359,12 +364,12 @@
             if (document.getElementById(`check-${id}`).checked) {
                 const tariff = document.getElementById(`tariff-${id}`).value;
                 const streamDate = document.getElementById(`stream-${id}`).value;
-                const duration = getDurationMonths(streamDate);
-                selectedSubjects.push({ id, tariff, duration });
+                const duration = getExactDuration(streamDate);
+                selectedSubjects.push({ id, tariff, duration, streamDate });
             }
         });
 
-        // Сортування: спочатку преміум, потім за тривалістю (найдовші зверху)
+        // Сортування: преміум вище, далі за тривалістю
         selectedSubjects.sort((a, b) => {
             if (a.tariff === 'premium' && b.tariff !== 'premium') return -1;
             if (a.tariff !== 'premium' && b.tariff === 'premium') return 1;
@@ -372,52 +377,62 @@
         });
 
         let globalGrandTotal = 0;
+        const subjectOrderInfo = {};
 
         selectedSubjects.forEach((subject, index) => {
             const monthlyPrice = pricing[subject.tariff][index];
-            const exactTotal = monthlyPrice * subject.duration;
-            const subjectTotal = Math.floor(exactTotal / 10) * 10;
             
-            // Виводимо точне значення до 3 знаків для тексту на екран
+            // Точне множення без проміжних округлень
+            const exactTotal = monthlyPrice * subject.duration;
+            // Округлення тільки кінцевої вартості предмета до найближчого цілого (або до 10 грн якщо треба, тут Math.round дає точні гривні)
+            const subjectTotal = Math.round(exactTotal);
+            
             const durFormatted = Math.round(subject.duration * 1000) / 1000;
             document.getElementById(`dur-${subject.id}`).innerText = `Тривалість: ${durFormatted} міс.`;
             document.getElementById(`total-${subject.id}`).innerText = subjectTotal.toLocaleString('uk-UA') + ' ₴';
             
             globalGrandTotal += subjectTotal;
+            subjectOrderInfo[subject.id] = index + 1;
         });
 
         document.getElementById('grandTotalText').innerText = globalGrandTotal.toLocaleString('uk-UA');
         
         allIds.forEach(id => {
+            const badgeContainer = document.getElementById(`badges-${id}`);
             if (!document.getElementById(`check-${id}`).checked) {
                 document.getElementById(`total-${id}`).innerText = '0 ₴';
                 document.getElementById(`dur-${id}`).innerText = '';
+                badgeContainer.innerHTML = '';
+                return;
             }
+
+            const streamDate = document.getElementById(`stream-${id}`).value;
+            const days = getDaysBetween(streamDate);
+            const orderNum = subjectOrderInfo[id];
+
+            let html = `<span class="badge badge-green">🟢 Поточний набір · ${formatStreamName(streamDate)} · через ${days} дн.</span>`;
+            if (orderNum) {
+                html += `<span class="badge badge-blue">📌 ${orderNum}-й предмет у розрахунку знижки</span>`;
+            }
+            badgeContainer.innerHTML = html;
         });
 
         const installmentsContainer = document.getElementById('installments-container');
         if (selectedSubjects.length >= 3) {
             const monthlyPayment = Math.round(globalGrandTotal / 5);
             installmentsContainer.innerHTML = `При оплаті частинами на 5 платежів: <strong>${monthlyPayment.toLocaleString('uk-UA')} ₴ / міс</strong>`;
-            installmentsContainer.style.color = '#3730a3';
-            installmentsContainer.style.fontWeight = '500';
         } else {
             installmentsContainer.innerHTML = `Розтермінування доступне від 3 предметів`;
-            installmentsContainer.style.color = 'var(--text-muted)';
-            installmentsContainer.style.fontWeight = '400';
         }
     }
     
     window.onload = () => {
         const allIds = ['ukr', 'math', 'hist', 'opt'];
-        
         allIds.forEach(id => {
-            if (id === 'opt') updateOptStreams(); 
+            if (id === 'opt') updateOptStreams();
             else populateStreams(id, `stream-${id}`);
+            toggleRow(id);
         });
-
-        allIds.forEach(id => toggleRow(id));
-        
         calculate();
     };
 </script>
