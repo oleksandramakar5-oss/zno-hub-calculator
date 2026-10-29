@@ -252,7 +252,7 @@
         premium: [1980, 1880, 1780, 1680]
     };
 
-    // Повна база потоків згідно з даними від керівництва (дата старту + тривалість)
+    // База потоків
     const streamsDB = {
         ukr: [
             { date: '2026-09-02', label: '1 вересня (А)', duration: 9.000 },
@@ -267,7 +267,7 @@
             { date: '2026-09-18', label: '18 вересня (B)', duration: 8.444 },
             { date: '2026-10-02', label: '2 жовтня (C)', duration: 8.000 },
             { date: '2026-10-23', label: '23 жовтня (D)', duration: 7.333 },
-            { date: '2025-11-24', label: '24 листопада (E)', duration: 6.250 },
+            { date: '2026-11-24', label: '24 листопада (E)', duration: 6.250 }, // Виправлено рік з 2025 на 2026
             { date: '2026-12-25', label: '25 грудня (F)', duration: 5.222 }
         ],
         hist: [
@@ -327,7 +327,7 @@
         document.getElementById('calculator-container').classList.toggle('detailed-mode');
     }
 
-    // Логіка вибору потоку за поточним днем (якщо до наступного <= 7 днів, беремо його, інакше минулий)
+    // Оновлена алгоритмічна логіка вибору потоку
     function getActiveStream(subjectKey) {
         const streams = streamsDB[subjectKey];
         const now = new Date();
@@ -339,17 +339,39 @@
             const streamDate = new Date(streams[i].date);
             streamDate.setHours(0, 0, 0, 0);
 
+            // Отримуємо різницю у днях між датою потоку і сьогодні
+            // додатнє значення = потік у майбутньому
+            // від'ємне значення = потік у минулому
             const diffDays = Math.ceil((streamDate - now) / (1000 * 60 * 60 * 24));
 
             if (diffDays >= 0) {
                 if (diffDays <= 7) {
-                    activeStream = streams[i]; // Наступний, якщо до нього <= 7 днів
+                    // Якщо до наступного потоку <= 7 днів, беремо його
+                    activeStream = streams[i];
                 } else if (i > 0) {
-                    activeStream = streams[i - 1]; // Інакше минулий
+                    // Перевіряємо, скільки днів минуло від ПОПЕРЕДНЬОГО потоку
+                    const prevStreamDate = new Date(streams[i - 1].date);
+                    prevStreamDate.setHours(0, 0, 0, 0);
+                    const daysSincePrevStarted = Math.floor((now - prevStreamDate) / (1000 * 60 * 60 * 24));
+
+                    if (daysSincePrevStarted > 14) {
+                        // Якщо попередній триває понад 14 днів, пропонуємо наступний
+                        activeStream = streams[i];
+                    } else {
+                        // Інакше залишаємо попередній
+                        activeStream = streams[i - 1];
+                    }
                 }
                 break;
             } else {
-                activeStream = streams[i];
+                // Якщо цей потік уже в минулому
+                const daysSinceStarted = Math.abs(diffDays);
+                if (daysSinceStarted > 14 && i < streams.length - 1) {
+                    // Якщо він стартував понад 14 днів тому — беремо наступний
+                    activeStream = streams[i + 1];
+                } else {
+                    activeStream = streams[i];
+                }
             }
         }
         return activeStream;
